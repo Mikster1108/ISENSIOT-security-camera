@@ -10,7 +10,7 @@ load_dotenv()
 mount_path = os.getenv("DRIVE_MOUNT_PATH")
 local_video_directory = os.getenv("LOCAL_VIDEO_DIRECTORY")
 
-logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 
 def get_all_files():
@@ -26,6 +26,8 @@ def get_file(filename):
         files = get_all_files()
         if filename in files:
             return os.path.join(local_video_directory, filename)
+        else:
+            raise FileNotFoundError
     except FileNotFoundError:
         raise
 
@@ -57,30 +59,30 @@ def upload_file_to_nas():
                 destination_path = os.path.join(mount_path, os.path.basename(file))
 
                 shutil.copy(file, destination_path)
-                successful_uploads.append(os.path.basename(file))
+                successful_uploads.append(base_filename)
 
                 delete_file(file)
             except FileNotFoundError:
-                logging.error(f"File not found with filepath {file}")
-                failed_uploads.append(os.path.basename(file))
+                logging.error(f"File not found")
+                failed_uploads.append(os.path.basename(base_filename))
             except IsADirectoryError:
                 logging.error(f"Specified file was a directory")
-                failed_uploads.append(os.path.basename(file))
+                failed_uploads.append(os.path.basename(base_filename))
     finally:
         if successful_uploads:
-            logging.error("Succesful uploads:\n")
+            logging.info("Successful uploads:")
             for file in successful_uploads:
-                logging.error(f"File {file} upload successful")
+                logging.info(f"File {file} upload successful")
         if failed_uploads:
-            logging.error("\nFailed uploads:\n")
+            logging.error("Failed uploads:")
             for file in failed_uploads:
                 logging.error(f"File {file} upload failed")
 
 
 if __name__ == '__main__':
-    enable_logging = True
+    enable_logging = False
 
-    if enable_logging:
+    if not enable_logging:
         logging.disable(logging.CRITICAL)
 
     upload_file_to_nas()
