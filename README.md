@@ -16,7 +16,7 @@ Some scripts should automatically start running on boot. These scripts should be
 - start_motion.sh
 - start_combining.sh
 - start_ldr.sh
-- start detecting
+- start_detecting_sound.sh
 - video_storage.py
 
 # Motion
