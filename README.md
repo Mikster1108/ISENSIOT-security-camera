@@ -1,6 +1,6 @@
 # This is the repository for the ISENSIOT security camera project
 
-In this repository you will find all the C programs responsible for managing the sensors that will be used for the security camera. There are also some other things here like scripts for sending data to the database. 
+In this repository you will find all the programs responsible for managing the sensors that will be used for the security camera. There are also some other things here like scripts for sending data to the database. 
 
 ## Running c programs
 
