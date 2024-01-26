@@ -3,45 +3,60 @@
 import RPi.GPIO as GPIO
 import time
 
-__author__ = 'Gus (Adapted from Adafruit)'
-__license__ = "GPL"
-__maintainer__ = "pimylifeup.com"
-
 GPIO.setmode(GPIO.BOARD)
 
-#define the pin that goes to the circuit
-pin_to_circuit = 7
+#pins to components
+ldr_pin = 7
 camera_pin = 37
+threshold = 15000
+
+#sets pin to camera as output pin
 GPIO.setup(camera_pin, GPIO.OUT)
 
-def rc_time (pin_to_circuit):
+
+def rc_time (ldr_pin):
     count = 0
   
-    #Output on the pin for 
-    GPIO.setup(pin_to_circuit, GPIO.OUT)
-    GPIO.output(pin_to_circuit, GPIO.LOW)
+    #sets ldr pin to output and sets it to low to discharge the pin
+    GPIO.setup(ldr_pin, GPIO.OUT)
+    GPIO.output(ldr_pin, GPIO.LOW)
     time.sleep(0.1)
 
-    #Change the pin back to input
-    GPIO.setup(pin_to_circuit, GPIO.IN)
+    #sets the pin back to input
+    GPIO.setup(ldr_pin, GPIO.IN)
   
-    #Count until the pin goes high
-    while (GPIO.input(pin_to_circuit) == GPIO.LOW):
+    #keeps counting until the pin goes high
+    while (GPIO.input(ldr_pin) == GPIO.LOW):
         count += 1
 
     return count
 
-#Catch when script is interupted, cleanup correctly
-try:
-    # Main loop
-    while True:
-        if rc_time(pin_to_circuit) > 10000: # value still needs to be adjusted
-            GPIO.output(camera_pin, GPIO.LOW)
-            print ("Switch off IR filter")
-        else:
-            print ("Switch on IR filter")
 
+def get_average(ldr_pin, measurements=10):
+    total_count = 0
+
+    for i in range(measurements):
+        total_count += rc_time(ldr_pin)
+        #adds a delay between measurements
+        time.sleep(0.1)  
+
+    average_count = total_count / measurements
+    return average_count
+
+#catch when script is interupted, cleanup correctly
+try:
+    #main loop
+    while True:
+        avg_value = get_average(ldr_pin, measurements=10)
+         
+        if avg_value > threshold: 
+            #switches IR filter off 
+            GPIO.output(camera_pin, GPIO.LOW)
+
+        else:
+            #switches IR filter on
             GPIO.output(camera_pin, GPIO.HIGH)
+
 except KeyboardInterrupt:
     pass
 finally:
