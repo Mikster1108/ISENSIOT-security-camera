@@ -8,7 +8,8 @@ GPIO.setmode(GPIO.BOARD)
 #pins to components
 ldr_pin = 7
 camera_pin = 37
-threshold = 15000
+switch_off_threshold = 15000
+sleep_time_in_s = 0.1
 
 #sets pin to camera as output pin
 GPIO.setup(camera_pin, GPIO.OUT)
@@ -20,7 +21,7 @@ def rc_time (ldr_pin):
     #sets ldr pin to output and sets it to low to discharge the pin
     GPIO.setup(ldr_pin, GPIO.OUT)
     GPIO.output(ldr_pin, GPIO.LOW)
-    time.sleep(0.1)
+    time.sleep(sleep_time_in_s)
 
     #sets the pin back to input
     GPIO.setup(ldr_pin, GPIO.IN)
@@ -38,7 +39,7 @@ def get_average(ldr_pin, measurements=10):
     for i in range(measurements):
         total_count += rc_time(ldr_pin)
         #adds a delay between measurements
-        time.sleep(0.1)  
+        time.sleep(sleep_time_in_s)  
 
     average_count = total_count / measurements
     return average_count
@@ -49,7 +50,7 @@ try:
     while True:
         avg_value = get_average(ldr_pin, measurements=10)
          
-        if avg_value > threshold: 
+        if avg_value > switch_off_threshold: 
             #switches IR filter off 
             GPIO.output(camera_pin, GPIO.LOW)
 

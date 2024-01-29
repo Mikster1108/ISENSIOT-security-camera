@@ -9,7 +9,7 @@ output_audio="${timestamp}.wav"
 output_folder="/home/harharpi/audio_video_files"
 
 #sound threshold
-threshold=2
+min_sound_threshold=2
 
 
 # Function to handle cleanup on exit
