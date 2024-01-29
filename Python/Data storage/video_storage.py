@@ -41,7 +41,7 @@ def delete_file(filepath):
 
 def upload_file_to_nas():
     try:
-        file_paths = sys.argv[1:]
+        file_paths = get_all_files()
         successful_uploads = []
         failed_uploads = []
 
