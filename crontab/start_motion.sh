@@ -7,7 +7,7 @@ if [ -n "$pid" ]; then
     true
 else
     echo "Starting motion"
-         sudo libcamerify motion 
+    sudo libcamerify motion  > /dev/null &
 fi
 
 

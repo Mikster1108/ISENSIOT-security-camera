@@ -17,8 +17,10 @@ for video in "$input_folder_path"/*.mp4; do
         filename_noext="${timestamp}"
         output="$output_folder_path/${filename_noext}.mp4"
         ffmpeg -i "$video" -i "$audio" -c:v copy -c:a aac -shortest -strict experimental "$output"
+        # Delete the audio and video files from the input folder after merging
+        sudo rm $video
+        sudo rm $audio
     else
         echo "Warning: No matching audio file found for $video"
     fi
 done
-

@@ -6,8 +6,8 @@ if [ -n "$pid" ]; then
     echo "Already running"
     true
 else
-    echo "Starting script to detect noises
-   sound_detect.sh
+    echo "Starting script to detect noises"
+    ./sound_detect.sh > /dev/null &
 fi
 
 

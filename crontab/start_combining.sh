@@ -7,7 +7,7 @@ if [ -n "$pid" ]; then
     true
 else
     echo "Starting script to combine audio with video"
-   sudo ./combine_audio_with_video.sh
+   sudo ./combine_audio_with_video.sh > /dev/null &
 fi
 
 

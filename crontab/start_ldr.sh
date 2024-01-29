@@ -7,6 +7,6 @@ if [ -n "$pid" ]; then
     true
 else
     echo "Starting python script"
-   python /home/harharpi/IR_filter_switch.py
+   python /home/harharpi/IR_filter_switch.py > /dev/null &
 fi
 
